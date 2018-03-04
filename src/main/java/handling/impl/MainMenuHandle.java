@@ -41,7 +41,7 @@ public class MainMenuHandle extends AbstractHandle {
 
             bot.sendMessage(new SendMessage()
                     .setReplyMarkup(kb.generate())
-                    .setText("Центральный дверь Акимата")
+                    .setText("Главное меню")
                     .setChatId(chatId)
             );
 
@@ -149,7 +149,7 @@ public class MainMenuHandle extends AbstractHandle {
                     in.close();
 
 
-                    System.out.println(response.toString());
+                    System.out.println(" -------------------------------------------------" + response.toString());
 
 
                     bot.sendMessage(new SendMessage()
