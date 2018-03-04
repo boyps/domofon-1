@@ -17,6 +17,9 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringJoiner;
 
 public class MainMenuHandle extends AbstractHandle {
 
@@ -101,14 +104,14 @@ public class MainMenuHandle extends AbstractHandle {
 
             if (usersDao.UserList(chatId).size() != 0) {
 
-               /* URL url = new URL("http://phone_number:77073078838@89.219.22.94/getsmscode");
+                URL url = new URL("http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote");
                 URLConnection con = url.openConnection();
                 HttpURLConnection http = (HttpURLConnection) con;
                 http.setRequestMethod("GET"); // PUT is another valid option
                 http.setDoOutput(true);
                 Map<String, String> arguments = new HashMap<>();
-                //arguments.put("phone_number", "77073078838");
-                // arguments.put("password", "sjh76HSn!"); // This is a fake password obviously
+                arguments.put("login", "admin");
+                arguments.put("password", "admin"); // This is a fake password obviously
                 StringJoiner sj = new StringJoiner("&");
                 for (Map.Entry<String, String> entry : arguments.entrySet())
                     sj.add(URLEncoder.encode(entry.getKey(), "UTF-8") + "="
@@ -120,17 +123,18 @@ public class MainMenuHandle extends AbstractHandle {
                 http.connect();
                 try (OutputStream os = http.getOutputStream()) {
                     os.write(out);
+                    System.out.println(" -------------------------------------------------"  );
+
                 } catch (Exception e) {
                     bot.sendMessage(new SendMessage()
                             .setText("Ошибка соединение")
                             .setChatId(chatId)
                     );
                 }
-*/
 
                 try {
 
-                   String url = "http://admin@admin:10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
+                   /*String url = "http://admin@admin:10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
 
                     URL obj = new URL(url);
                     HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
@@ -144,7 +148,7 @@ public class MainMenuHandle extends AbstractHandle {
                     while ((inputLine = in.readLine()) != null) {
                         response.append(inputLine);
                     }
-                    in.close();
+                    in.close();*/
 
 
 
@@ -177,7 +181,6 @@ public class MainMenuHandle extends AbstractHandle {
 
 
 
-                    System.out.println(" -------------------------------------------------" + response.toString() );
 
 
                     bot.sendMessage(new SendMessage()
