@@ -78,40 +78,51 @@ public class MainMenuHandle extends AbstractHandle {
     @Step(value = "openMainDoor", commandText = "\uD83D\uDD11 Открыть дверь")
     public void openMainDoor() throws Exception {
 
-        if (usersDao.UserList(chatId).size() != 0) {
+        try {
 
-            URL url = new URL("http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote");
-            URLConnection con = url.openConnection();
-            HttpURLConnection http = (HttpURLConnection) con;
-            http.setRequestMethod("GET"); // PUT is another valid option
-            http.setDoOutput(true);
-            Map<String, String> arguments = new HashMap<>();
-            arguments.put("admin","admin");
-            // arguments.put("password", "sjh76HSn!"); // This is a fake password obviously
-            StringJoiner sj = new StringJoiner("&");
-            for (Map.Entry<String, String> entry : arguments.entrySet())
-                sj.add(URLEncoder.encode(entry.getKey(), "UTF-8") + "="
-                        + URLEncoder.encode(entry.getValue(), "UTF-8"));
-            byte[] out = sj.toString().getBytes(StandardCharsets.UTF_8);
-            int length = out.length;
-            http.setFixedLengthStreamingMode(length);
-            http.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-            http.connect();
-            try (OutputStream os = http.getOutputStream()) {
-                os.write(out);
-            }catch (Exception e){
+            if (usersDao.UserList(chatId).size() != 0) {
 
+                URL url = new URL("http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote");
+                URLConnection con = url.openConnection();
+                HttpURLConnection http = (HttpURLConnection) con;
+                http.setRequestMethod("GET"); // PUT is another valid option
+                http.setDoOutput(true);
+                Map<String, String> arguments = new HashMap<>();
+                arguments.put("admin", "admin");
+                // arguments.put("password", "sjh76HSn!"); // This is a fake password obviously
+                StringJoiner sj = new StringJoiner("&");
+                for (Map.Entry<String, String> entry : arguments.entrySet())
+                    sj.add(URLEncoder.encode(entry.getKey(), "UTF-8") + "="
+                            + URLEncoder.encode(entry.getValue(), "UTF-8"));
+                byte[] out = sj.toString().getBytes(StandardCharsets.UTF_8);
+                int length = out.length;
+                http.setFixedLengthStreamingMode(length);
+                http.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+                http.connect();
+                try (OutputStream os = http.getOutputStream()) {
+                    os.write(out);
+                } catch (Exception e) {
+                    bot.sendMessage(new SendMessage()
+                            .setText("Ошибка соединение")
+                            .setChatId(chatId)
+                    );
+                }
+
+                bot.sendMessage(new SendMessage()
+                        .setText("Успешно!")
+                        .setChatId(chatId)
+                );
+
+            } else {
+                bot.sendMessage(new SendMessage()
+                        .setText("У вас нет доступа ")
+                        .setChatId(chatId)
+                );
             }
-
-
+        }catch (Exception e){
 
             bot.sendMessage(new SendMessage()
-                    .setText("Успешно!")
-                    .setChatId(chatId)
-            );
-        } else {
-            bot.sendMessage(new SendMessage()
-                    .setText("У вас нет доступа ")
+                    .setText("Ошибка соединение")
                     .setChatId(chatId)
             );
         }
