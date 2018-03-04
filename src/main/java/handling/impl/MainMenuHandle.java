@@ -1,13 +1,7 @@
 package handling.impl;
 
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import database.UsersDao;
 import handling.AbstractHandle;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.glassfish.jersey.server.Uri;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import pro.nextbit.telegramconstructor.Json;
 import pro.nextbit.telegramconstructor.components.keyboard.IKeyboard;
@@ -16,15 +10,10 @@ import pro.nextbit.telegramconstructor.stepmapping.Step;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringJoiner;
+import java.nio.charset.Charset;
+import java.util.Base64;
 
 public class MainMenuHandle extends AbstractHandle {
 
@@ -105,126 +94,56 @@ public class MainMenuHandle extends AbstractHandle {
     @Step(value = "openMainDoor")
     public void openMainDoor() throws Exception {
 
-        try {
+        if (usersDao.UserList(chatId).size() != 0) {
 
-            if (usersDao.UserList(chatId).size() != 0) {
+            try {
 
-               /* URL url = new URL("http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote");
-                URLConnection con = url.openConnection();
-                HttpURLConnection http = (HttpURLConnection) con;
-                http.setRequestMethod("GET"); // PUT is another valid option
-                http.setDoOutput(true);
-                Map<String, String> arguments = new HashMap<>();
-                arguments.put("login", "admin");
-                arguments.put("password", "admin"); // This is a fake password obviously
-                StringJoiner sj = new StringJoiner("&");
-                for (Map.Entry<String, String> entry : arguments.entrySet())
-                    sj.add(URLEncoder.encode(entry.getKey(), "UTF-8") + "="
-                            + URLEncoder.encode(entry.getValue(), "UTF-8"));
-                byte[] out = sj.toString().getBytes(StandardCharsets.UTF_8);
-                int length = out.length;
-                http.setFixedLengthStreamingMode(length);
-                http.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-                http.connect();
-                try (OutputStream os = http.getOutputStream()) {
-                    os.write(out);
-                    System.out.println(" -------------------------------------------------"  );
+                String urlStr = "http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
+                String encoding = Base64.getEncoder().encodeToString("admin:admin".getBytes());
 
-                } catch (Exception e) {
-                    bot.sendMessage(new SendMessage()
-                            .setText("Ошибка соединение")
-                            .setChatId(chatId)
-                    );
-                }*/
+                URL url = new URL(urlStr);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setDoOutput(true);
+                connection.setRequestProperty("Authorization", "Basic " + encoding);
 
-                try {
+                InputStreamReader isr = new InputStreamReader(connection.getInputStream());
+                BufferedReader in = new BufferedReader(isr);
 
-                   String url = "http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
-
-                    URL obj = new URL(url);
-                    HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
-
-                    connection.setRequestMethod("GET");
-
-                    BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                    String inputLine;
-                    StringBuffer response = new StringBuffer();
-
-                    while ((inputLine = in.readLine()) != null) {
-                        response.append(inputLine);
-                    }
-                    in.close();
-
-                    System.out.println(response.toString());
-                    System.out.println("=============================================================================================");
-
-
-
-                    /*URL url = new URL("http://admin@admin:10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote -d '{\"admin\":[\"admin\"]}'");
-
-                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-                            url.openStream(), "UTF-8"))) {
-                        for (String line; (line = reader.readLine()) != null;) {
-                            System.out.println(line);
-                        }
-                    }*/
-
-
-
-
-
-/*
-                        String stringUrl = "http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
-                        URL url = new URL(stringUrl);
-                        URLConnection uc = url.openConnection();
-
-                        uc.setRequestProperty("X-Requested-With", "Curl");
-
-                        String userpass = "admin" + ":" + "admin";
-                        String basicAuth = "Basic " + new String(new Base64().encode(userpass.getBytes()));
-                        uc.setRequestProperty("Authorization", basicAuth);
-
-                        InputStreamReader inputStreamReader = new InputStreamReader(uc.getInputStream());*/
-                        // read this input
-
-
-
-
-
-                    bot.sendMessage(new SendMessage()
-                            .setText("Успешно!")
-                            .setChatId(chatId)
-                    );
-                }catch (Exception e){
-                    bot.sendMessage(new SendMessage()
-                            .setText("Ошибка соединение")
-                            .setChatId(chatId)
-                    );
-
+                String inputLine;
+                StringBuilder response = new StringBuilder();
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
                 }
+                in.close();
 
-            } else {
+                System.out.println(response.toString());
+                System.out.println("=============================================================================================");
+
                 bot.sendMessage(new SendMessage()
-                        .setText("У вас нет доступа ")
+                        .setText("Успешно!")
+                        .setChatId(chatId)
+                );
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                bot.sendMessage(new SendMessage()
+                        .setText("Ошибка соединение")
                         .setChatId(chatId)
                 );
             }
-        } catch (Exception e) {
 
+        } else {
             bot.sendMessage(new SendMessage()
-                    .setText("Ошибка соединение")
+                    .setText("У вас нет доступа ")
                     .setChatId(chatId)
             );
         }
-
     }
 
 
     @Step(value = "test", commandText = "/test")
     public void test() throws Exception {
-
-
-
 
 
     }
