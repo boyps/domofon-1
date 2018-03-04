@@ -21,4 +21,4 @@ WORKDIR /
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 
 # Define default command.
-CMD java -jar /domofon.jar
+RUN java -jar /domofon.jar
