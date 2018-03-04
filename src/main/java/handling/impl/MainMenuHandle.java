@@ -212,7 +212,7 @@ public class MainMenuHandle extends AbstractHandle {
     @Step(value = "test", commandText = "/test")
     public void test() throws Exception {
 
-        URL url = new URL("http://admin@admin:10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote -d '{\"admin\":[\"admin\"]}'");
+        URL url = new URL("http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote -d '{\"admin\":[\"admin\"]}'");
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(
                 url.openStream(), "UTF-8"))) {
