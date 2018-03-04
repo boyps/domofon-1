@@ -9,6 +9,7 @@ import pro.nextbit.telegramconstructor.components.keyboard.IKeyboard;
 import pro.nextbit.telegramconstructor.components.keyboard.Keyboard;
 import pro.nextbit.telegramconstructor.stepmapping.Step;
 
+import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -129,8 +130,8 @@ public class MainMenuHandle extends AbstractHandle {
 
                 try {
 
-                   // String url = "http://http://admin@admin:10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
-/*
+                   String url = "http://admin@admin:10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
+
                     URL obj = new URL(url);
                     HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
 
@@ -143,9 +144,24 @@ public class MainMenuHandle extends AbstractHandle {
                     while ((inputLine = in.readLine()) != null) {
                         response.append(inputLine);
                     }
-                    in.close();*/
+                    in.close();
 
 
+
+                    /*URL url = new URL("http://admin@admin:10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote -d '{\"admin\":[\"admin\"]}'");
+
+                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                            url.openStream(), "UTF-8"))) {
+                        for (String line; (line = reader.readLine()) != null;) {
+                            System.out.println(line);
+                        }
+                    }*/
+
+
+
+
+
+/*
                         String stringUrl = "http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
                         URL url = new URL(stringUrl);
                         URLConnection uc = url.openConnection();
@@ -156,12 +172,12 @@ public class MainMenuHandle extends AbstractHandle {
                         String basicAuth = "Basic " + new String(new Base64().encode(userpass.getBytes()));
                         uc.setRequestProperty("Authorization", basicAuth);
 
-                        InputStreamReader inputStreamReader = new InputStreamReader(uc.getInputStream());
+                        InputStreamReader inputStreamReader = new InputStreamReader(uc.getInputStream());*/
                         // read this input
 
 
 
-                    System.out.println(" -------------------------------------------------" + inputStreamReader.toString() );
+                    System.out.println(" -------------------------------------------------" + response.toString() );
 
 
                     bot.sendMessage(new SendMessage()
@@ -192,6 +208,26 @@ public class MainMenuHandle extends AbstractHandle {
 
     }
 
+
+    @Step(value = "test", commandText = "/test")
+    public void test() throws Exception {
+
+        URL url = new URL("http://admin@admin:10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote -d '{\"admin\":[\"admin\"]}'");
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                url.openStream(), "UTF-8"))) {
+            for (String line; (line = reader.readLine()) != null;) {
+                System.out.println(line);
+                bot.sendMessage(new SendMessage()
+                        .setText(line.toString())
+                        .setChatId(chatId)
+                );
+            }
+        }
+
+
+
+    }
 
 
 }
