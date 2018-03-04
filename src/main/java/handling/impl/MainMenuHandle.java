@@ -3,9 +3,13 @@ package handling.impl;
 import database.UsersDao;
 import handling.AbstractHandle;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
+import pro.nextbit.telegramconstructor.Json;
+import pro.nextbit.telegramconstructor.components.keyboard.IKeyboard;
 import pro.nextbit.telegramconstructor.components.keyboard.Keyboard;
 import pro.nextbit.telegramconstructor.stepmapping.Step;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -75,20 +79,37 @@ public class MainMenuHandle extends AbstractHandle {
     }
 
 
-    @Step(value = "openMainDoor", commandText = "\uD83D\uDD11 Открыть дверь")
+    @Step(value = "openDoor", commandText = "\uD83D\uDD11 Открыть дверь")
+    public void openDoor() throws Exception {
+
+        IKeyboard kb = new IKeyboard();
+        kb.next();
+        kb.add("Центральный вход акимат", Json.set("step", "openMainDoor"));
+
+        clearMessageOnClick(bot.sendMessage(new SendMessage()
+                .setText("Выберите дверь, которую вы хотите открыть")
+                .setReplyMarkup(kb.generate())
+                .setChatId(chatId)
+        ));
+
+
+    }
+
+
+    @Step(value = "openMainDoor")
     public void openMainDoor() throws Exception {
 
         try {
 
             if (usersDao.UserList(chatId).size() != 0) {
 
-                URL url = new URL("http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote");
+               /* URL url = new URL("http://phone_number:77073078838@89.219.22.94/getsmscode");
                 URLConnection con = url.openConnection();
                 HttpURLConnection http = (HttpURLConnection) con;
                 http.setRequestMethod("GET"); // PUT is another valid option
                 http.setDoOutput(true);
                 Map<String, String> arguments = new HashMap<>();
-                arguments.put("admin", "admin");
+                //arguments.put("phone_number", "77073078838");
                 // arguments.put("password", "sjh76HSn!"); // This is a fake password obviously
                 StringJoiner sj = new StringJoiner("&");
                 for (Map.Entry<String, String> entry : arguments.entrySet())
@@ -107,11 +128,41 @@ public class MainMenuHandle extends AbstractHandle {
                             .setChatId(chatId)
                     );
                 }
+*/
 
-                bot.sendMessage(new SendMessage()
-                        .setText("Успешно!")
-                        .setChatId(chatId)
-                );
+                try {
+
+                    String url = "http://admin:admin@10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
+
+                    URL obj = new URL(url);
+                    HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
+
+                    connection.setRequestMethod("GET");
+
+                    BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    String inputLine;
+                    StringBuffer response = new StringBuffer();
+
+                    while ((inputLine = in.readLine()) != null) {
+                        response.append(inputLine);
+                    }
+                    in.close();
+
+
+                    System.out.println(response.toString());
+
+
+                    bot.sendMessage(new SendMessage()
+                            .setText("Успешно!")
+                            .setChatId(chatId)
+                    );
+                }catch (Exception e){
+                    bot.sendMessage(new SendMessage()
+                            .setText("Ошибка соединение")
+                            .setChatId(chatId)
+                    );
+
+                }
 
             } else {
                 bot.sendMessage(new SendMessage()
@@ -119,7 +170,7 @@ public class MainMenuHandle extends AbstractHandle {
                         .setChatId(chatId)
                 );
             }
-        }catch (Exception e){
+        } catch (Exception e) {
 
             bot.sendMessage(new SendMessage()
                     .setText("Ошибка соединение")
