@@ -3,6 +3,11 @@ package handling.impl;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import database.UsersDao;
 import handling.AbstractHandle;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.glassfish.jersey.server.Uri;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import pro.nextbit.telegramconstructor.Json;
 import pro.nextbit.telegramconstructor.components.keyboard.IKeyboard;
@@ -104,7 +109,7 @@ public class MainMenuHandle extends AbstractHandle {
 
             if (usersDao.UserList(chatId).size() != 0) {
 
-                URL url = new URL("http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote");
+               /* URL url = new URL("http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote");
                 URLConnection con = url.openConnection();
                 HttpURLConnection http = (HttpURLConnection) con;
                 http.setRequestMethod("GET"); // PUT is another valid option
@@ -130,11 +135,11 @@ public class MainMenuHandle extends AbstractHandle {
                             .setText("Ошибка соединение")
                             .setChatId(chatId)
                     );
-                }
+                }*/
 
                 try {
 
-                   /*String url = "http://admin@admin:10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
+                   String url = "http://admin:admin@10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
 
                     URL obj = new URL(url);
                     HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
@@ -148,7 +153,10 @@ public class MainMenuHandle extends AbstractHandle {
                     while ((inputLine = in.readLine()) != null) {
                         response.append(inputLine);
                     }
-                    in.close();*/
+                    in.close();
+
+                    System.out.println(response.toString());
+                    System.out.println("=============================================================================================");
 
 
 
@@ -215,18 +223,7 @@ public class MainMenuHandle extends AbstractHandle {
     @Step(value = "test", commandText = "/test")
     public void test() throws Exception {
 
-        URL url = new URL("http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote -d '{\"admin\":[\"admin\"]}'");
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-                url.openStream(), "UTF-8"))) {
-            for (String line; (line = reader.readLine()) != null;) {
-                System.out.println(line);
-                bot.sendMessage(new SendMessage()
-                        .setText(line.toString())
-                        .setChatId(chatId)
-                );
-            }
-        }
 
 
 
