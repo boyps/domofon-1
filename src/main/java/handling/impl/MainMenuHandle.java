@@ -1,5 +1,6 @@
 package handling.impl;
 
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import database.UsersDao;
 import handling.AbstractHandle;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
@@ -8,7 +9,6 @@ import pro.nextbit.telegramconstructor.components.keyboard.IKeyboard;
 import pro.nextbit.telegramconstructor.components.keyboard.Keyboard;
 import pro.nextbit.telegramconstructor.stepmapping.Step;
 
-import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -16,9 +16,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringJoiner;
 
 public class MainMenuHandle extends AbstractHandle {
 
@@ -132,8 +129,8 @@ public class MainMenuHandle extends AbstractHandle {
 
                 try {
 
-                    String url = "http://admin:admin@10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
-
+                   // String url = "http://http://admin@admin:10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
+/*
                     URL obj = new URL(url);
                     HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
 
@@ -146,10 +143,25 @@ public class MainMenuHandle extends AbstractHandle {
                     while ((inputLine = in.readLine()) != null) {
                         response.append(inputLine);
                     }
-                    in.close();
+                    in.close();*/
 
 
-                    System.out.println(" -------------------------------------------------" + response.toString());
+                        String stringUrl = "http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
+                        URL url = new URL(stringUrl);
+                        URLConnection uc = url.openConnection();
+
+                        uc.setRequestProperty("X-Requested-With", "Curl");
+
+                        String userpass = "admin" + ":" + "admin";
+                        String basicAuth = "Basic " + new String(new Base64().encode(userpass.getBytes()));
+                        uc.setRequestProperty("Authorization", basicAuth);
+
+                        InputStreamReader inputStreamReader = new InputStreamReader(uc.getInputStream());
+                        // read this input
+
+
+
+                    System.out.println(" -------------------------------------------------" + inputStreamReader.toString() );
 
 
                     bot.sendMessage(new SendMessage()
@@ -179,4 +191,7 @@ public class MainMenuHandle extends AbstractHandle {
         }
 
     }
+
+
+
 }
