@@ -100,11 +100,11 @@ public class MainMenuHandle extends AbstractHandle {
             try {
                 String command = "curl  --digest -u \"admin:admin\" 'http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote'";
                 Process process = Runtime.getRuntime().exec(command);
-                BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()));
+                BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
                 String line;
                 StringBuilder response = new StringBuilder();
-                while ((line = br.readLine()) != null){
+                while ((line = br.readLine()) != null) {
                     response.append(line);
                 }
 
@@ -121,7 +121,7 @@ public class MainMenuHandle extends AbstractHandle {
                         .setChatId(chatId)
                 );
 
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 bot.sendMessage(new SendMessage()
                         .setText("Ошибка соединение")
@@ -162,29 +162,61 @@ public class MainMenuHandle extends AbstractHandle {
 
             String command = "curl  --digest -u \"admin:admin\" 'http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote'";
             Process process = Runtime.getRuntime().exec(command);
-           // System.out.println(response.toString());
+            // System.out.println(response.toString());
             System.out.println("=============================================================================================");
-
 
 
             bot.sendMessage(new SendMessage()
                     .setText("Успешно!")
                     .setChatId(chatId)
             );
-        }catch (Exception e){
+        } catch (Exception e) {
             bot.sendMessage(new SendMessage()
                     .setText("Ошибка соединение")
                     .setChatId(chatId)
             );
 
         }
-
-
     }
 
+        @Step(value = "test2", commandText = "/test")
+        public void test2() throws Exception {
 
 
+            try {
 
+            String url = "http://admin:admin@10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
+
+            URL obj = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
+
+            connection.setRequestMethod("GET");
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+
+
+                System.out.println("=============================================================================================");
+
+
+                bot.sendMessage(new SendMessage()
+                        .setText("Успешно!")
+                        .setChatId(chatId)
+                );
+            } catch (Exception e) {
+                bot.sendMessage(new SendMessage()
+                        .setText("Ошибка соединение")
+                        .setChatId(chatId)
+                );
+
+            }
+        }
 
 
 }
