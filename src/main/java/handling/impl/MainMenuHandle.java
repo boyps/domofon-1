@@ -11,9 +11,7 @@ import pro.nextbit.telegramconstructor.stepmapping.Step;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.*;
 import java.nio.charset.Charset;
 import org.apache.commons.codec.binary.Base64;
 
@@ -120,8 +118,17 @@ public class MainMenuHandle extends AbstractHandle {
 
             try {
 
+
+                Authenticator.setDefault(new Authenticator() {
+
+                    @Override
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication("admin", "admin".toCharArray());
+                    }
+                });
+
                 System.out.println("============================================================");
-                String stringUrl = "http://admin:admin@10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
+                String stringUrl = "http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
                 URL url = new URL(stringUrl);
                 URLConnection uc = url.openConnection();
                 uc.setRequestProperty("X-Requested-With", "Curl");
