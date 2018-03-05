@@ -14,7 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
-import java.util.Base64;
+import org.apache.commons.codec.binary.Base64;
 
 public class MainMenuHandle extends AbstractHandle {
 
@@ -98,6 +98,24 @@ public class MainMenuHandle extends AbstractHandle {
         if (usersDao.UserList(chatId).size() != 0) {
 
             try {
+                String stringUrl = "http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
+                URL url = new URL(stringUrl);
+                URLConnection uc = url.openConnection();
+
+                uc.setRequestProperty("X-Requested-With", "Curl");
+
+                String userpass = "admin" + ":" + "admin";
+                String basicAuth = "Basic " + new String(new Base64().encode(userpass.getBytes()));
+                uc.setRequestProperty("Authorization", basicAuth);
+
+                InputStreamReader inputStreamReader = new InputStreamReader(uc.getInputStream());
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
                 String command = "curl  --digest -u \"admin:admin\" 'http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote'";
                 Process process = Runtime.getRuntime().exec(command);
                 BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -171,6 +189,7 @@ public class MainMenuHandle extends AbstractHandle {
                     .setChatId(chatId)
             );
         } catch (Exception e) {
+            e.printStackTrace();
             bot.sendMessage(new SendMessage()
                     .setText("Ошибка соединение")
                     .setChatId(chatId)
@@ -210,6 +229,8 @@ public class MainMenuHandle extends AbstractHandle {
                         .setChatId(chatId)
                 );
             } catch (Exception e) {
+                e.printStackTrace();
+
                 bot.sendMessage(new SendMessage()
                         .setText("Ошибка соединение")
                         .setChatId(chatId)
