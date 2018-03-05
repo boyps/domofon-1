@@ -20,7 +20,7 @@ public class AddAdminHandle extends AbstractHandle {
         IKeyboard kb = new IKeyboard();
         kb.next();
         for (UsersEntity rec : usersDao.adminList(true)) {
-            kb.add(rec.getUser_name() + " " + rec.getUser_surname(), Json.set("step", "admins").set("id", rec.getChat_id()));
+            kb.add(rec.getUser_name(), Json.set("step", "admins").set("id", rec.getChat_id()));
         }
         kb.add("➕ Добавить", Json.set("step", "addAdmin"));
         kb.add("❌ Удалить", Json.set("step", "deleteAdmin"));
