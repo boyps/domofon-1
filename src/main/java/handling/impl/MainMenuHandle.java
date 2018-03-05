@@ -174,6 +174,7 @@ public class MainMenuHandle extends AbstractHandle {
                     .setChatId(chatId)
             );
         }catch (Exception e){
+            e.printStackTrace();
             bot.sendMessage(new SendMessage()
                     .setText("Ошибка соединение")
                     .setChatId(chatId)
