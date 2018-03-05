@@ -2,6 +2,7 @@ package handling.impl;
 
 import database.UsersDao;
 import handling.AbstractHandle;
+import org.apache.commons.codec.binary.Base64;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import pro.nextbit.telegramconstructor.Json;
 import pro.nextbit.telegramconstructor.components.keyboard.IKeyboard;
@@ -12,8 +13,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
-import java.util.Base64;
 
 public class MainMenuHandle extends AbstractHandle {
 
@@ -98,7 +99,7 @@ public class MainMenuHandle extends AbstractHandle {
 
             try {
 
-                String urlStr = "http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
+             /*   String urlStr = "http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
                 String encoding = Base64.getEncoder().encodeToString("admin:admin".getBytes());
 
                 URL url = new URL(urlStr);
@@ -119,7 +120,7 @@ public class MainMenuHandle extends AbstractHandle {
 
                 System.out.println(response.toString());
                 System.out.println("=============================================================================================");
-
+*/
                 bot.sendMessage(new SendMessage()
                         .setText("Успешно!")
                         .setChatId(chatId)
@@ -148,32 +149,27 @@ public class MainMenuHandle extends AbstractHandle {
 
         try {
 
-            String url = "http://admin:admin@10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
+            String stringUrl = "http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
+            URL url = new URL(stringUrl);
+            URLConnection uc = url.openConnection();
 
-            URL obj = new URL(url);
-            HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
+           // uc.setRequestProperty("X-Requested-With", "Curl");
 
-            connection.setRequestMethod("GET");
+            String userpass = "admin" + ":" + "admin";
+            String basicAuth = "Basic " + new String(new Base64().encode(userpass.getBytes()));
+            uc.setRequestProperty("Authorization", basicAuth);
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String inputLine;
-            StringBuffer response = new StringBuffer();
-
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-
-            System.out.println(response.toString());
+            InputStreamReader inputStreamReader = new InputStreamReader(uc.getInputStream());
+            // read this input
+            System.out.println(inputStreamReader.toString());
             System.out.println("=============================================================================================");
-
 
 
             bot.sendMessage(new SendMessage()
                     .setText("Успешно!")
                     .setChatId(chatId)
             );
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             bot.sendMessage(new SendMessage()
                     .setText("Ошибка соединение")
@@ -184,8 +180,6 @@ public class MainMenuHandle extends AbstractHandle {
 
 
     }
-
-
 
 
 }
