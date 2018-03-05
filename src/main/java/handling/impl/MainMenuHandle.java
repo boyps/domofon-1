@@ -146,7 +146,45 @@ public class MainMenuHandle extends AbstractHandle {
     public void test() throws Exception {
 
 
+        try {
+
+            String url = "http://admin:admin@10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
+
+            URL obj = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
+
+            connection.setRequestMethod("GET");
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+
+            System.out.println(response.toString());
+            System.out.println("=============================================================================================");
+
+
+
+            bot.sendMessage(new SendMessage()
+                    .setText("Успешно!")
+                    .setChatId(chatId)
+            );
+        }catch (Exception e){
+            bot.sendMessage(new SendMessage()
+                    .setText("Ошибка соединение")
+                    .setChatId(chatId)
+            );
+
+        }
+
+
     }
+
+
 
 
 }

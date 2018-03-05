@@ -32,7 +32,7 @@ public class BackgroundTasks {
 
     // описание cron (секунд минут час день месяц год)
     // если * тогда повторяется
-    @Scheduled(cron = "0 0 12 * * ?")
+   /* @Scheduled(cron = "0 0 12 * * ?")
     public void createData() {
 
         try {
@@ -40,7 +40,7 @@ public class BackgroundTasks {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
 
 }
