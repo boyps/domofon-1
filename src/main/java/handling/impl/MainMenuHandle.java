@@ -33,7 +33,7 @@ public class MainMenuHandle extends AbstractHandle {
         if (usersDao.UserList(chatId).size() != 0) {
             Keyboard kb = new Keyboard();
             kb.next();
-            kb.add("\uD83D\uDD11 Открыть дверь");
+            kb.add("\uD83D\uDD18 Открыть дверь");
 
             bot.sendMessage(new SendMessage()
                     .setReplyMarkup(kb.generate())
@@ -75,7 +75,7 @@ public class MainMenuHandle extends AbstractHandle {
     }
 
 
-    @Step(value = "openDoor", commandText = "\uD83D\uDD11 Открыть дверь")
+    @Step(value = "openDoor", commandText = "\uD83D\uDD18 Открыть дверь")
     public void openDoor() throws Exception {
 
         IKeyboard kb = new IKeyboard();
@@ -98,35 +98,30 @@ public class MainMenuHandle extends AbstractHandle {
         if (usersDao.UserList(chatId).size() != 0) {
 
             try {
+                String command = "curl  --digest -u \"admin:admin\" 'http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote'";
+                Process process = Runtime.getRuntime().exec(command);
+                BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()));
 
-                String urlStr = "http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
-                String encoding = Base64.getEncoder().encodeToString("admin:admin".getBytes());
-
-                URL url = new URL(urlStr);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                connection.setDoOutput(true);
-                connection.setRequestProperty("Authorization", "Basic " + encoding);
-
-                InputStreamReader isr = new InputStreamReader(connection.getInputStream());
-                BufferedReader in = new BufferedReader(isr);
-
-                String inputLine;
+                String line;
                 StringBuilder response = new StringBuilder();
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
+                while ((line = br.readLine()) != null){
+                    response.append(line);
                 }
-                in.close();
 
-                System.out.println(response.toString());
-                System.out.println("=============================================================================================");
+                process.waitFor();
+                System.out.println("exit: " + process.exitValue());
+                process.destroy();
+
+                System.out.println("============================================================");
+                System.out.println(response);
+                System.out.println("============================================================");
 
                 bot.sendMessage(new SendMessage()
                         .setText("Успешно!")
                         .setChatId(chatId)
                 );
 
-            } catch (Exception e) {
+            } catch (Exception e){
                 e.printStackTrace();
                 bot.sendMessage(new SendMessage()
                         .setText("Ошибка соединение")
@@ -149,7 +144,7 @@ public class MainMenuHandle extends AbstractHandle {
 
         try {
 
-            String command = "curl -D - --digest -vu \"admin:admin\" 'http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote'";
+            String command = "curl  --digest -u \"admin:admin\" 'http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote'";
             Process process = Runtime.getRuntime().exec(command);
             BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()));
 
