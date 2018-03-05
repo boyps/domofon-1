@@ -179,7 +179,7 @@ public class MainMenuHandle extends AbstractHandle {
         }
     }
 
-        @Step(value = "test2", commandText = "/test")
+        @Step(value = "test2", commandText = "/test2")
         public void test2() throws Exception {
 
 
