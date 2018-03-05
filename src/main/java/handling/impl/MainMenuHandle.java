@@ -9,6 +9,7 @@ import pro.nextbit.telegramconstructor.components.keyboard.Keyboard;
 import pro.nextbit.telegramconstructor.stepmapping.Step;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -98,6 +99,8 @@ public class MainMenuHandle extends AbstractHandle {
         if (usersDao.UserList(chatId).size() != 0) {
 
             try {
+
+                System.out.println("============================================================");
                 String stringUrl = "http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
                 URL url = new URL(stringUrl);
                 URLConnection uc = url.openConnection();
@@ -116,23 +119,40 @@ public class MainMenuHandle extends AbstractHandle {
             }
 
             try {
+
+                System.out.println("============================================================");
+                String stringUrl = "http://admin:admin@10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
+                URL url = new URL(stringUrl);
+                URLConnection uc = url.openConnection();
+                uc.setRequestProperty("X-Requested-With", "Curl");
+                InputStreamReader inputStreamReader = new InputStreamReader(uc.getInputStream());
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+
                 String command = "curl  --digest -u \"admin:admin\" 'http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote'";
-                Process process = Runtime.getRuntime().exec(command);
-                BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                Process p = Runtime.getRuntime().exec(command);
 
-                String line;
-                StringBuilder response = new StringBuilder();
-                while ((line = br.readLine()) != null) {
-                    response.append(line);
-                }
+                new Thread(new Runnable() {
+                    public void run() {
+                        BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                        String line = null;
 
-                process.waitFor();
-                System.out.println("exit: " + process.exitValue());
-                process.destroy();
+                        try {
+                            System.out.println("============================================================");
+                            while ((line = input.readLine()) != null)
+                                System.out.println(line);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
 
-                System.out.println("============================================================");
-                System.out.println(response);
-                System.out.println("============================================================");
+                p.waitFor();
 
                 bot.sendMessage(new SendMessage()
                         .setText("Успешно!")
