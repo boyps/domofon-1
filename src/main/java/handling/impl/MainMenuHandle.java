@@ -144,37 +144,45 @@ public class MainMenuHandle extends AbstractHandle {
 
         try {
 
+          /*  String url = "http://admin:admin@10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
+
+            URL obj = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
+
+            connection.setRequestMethod("GET");
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();*/
+
             String command = "curl  --digest -u \"admin:admin\" 'http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote'";
             Process process = Runtime.getRuntime().exec(command);
-            BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()));
+           // System.out.println(response.toString());
+            System.out.println("=============================================================================================");
 
-            String line;
-            StringBuilder response = new StringBuilder();
-            while ((line = br.readLine()) != null){
-                response.append(line);
-            }
 
-            process.waitFor();
-            System.out.println("exit: " + process.exitValue());
-            process.destroy();
-
-            System.out.println("============================================================");
-            System.out.println(response);
-            System.out.println("============================================================");
 
             bot.sendMessage(new SendMessage()
                     .setText("Успешно!")
                     .setChatId(chatId)
             );
-
-        } catch (Exception e){
-            e.printStackTrace();
+        }catch (Exception e){
             bot.sendMessage(new SendMessage()
                     .setText("Ошибка соединение")
                     .setChatId(chatId)
             );
+
         }
+
+
     }
+
+
 
 
 
