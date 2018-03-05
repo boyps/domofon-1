@@ -98,29 +98,8 @@ public class MainMenuHandle extends AbstractHandle {
 
             try {
 
-                System.out.println("============================================================");
-                String stringUrl = "http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
-                URL url = new URL(stringUrl);
-                URLConnection uc = url.openConnection();
-
-                uc.setRequestProperty("X-Requested-With", "Curl");
-
-                String userpass = "admin" + ":" + "admin";
-                String basicAuth = "Basic " + new String(new Base64().encode(userpass.getBytes()));
-                uc.setRequestProperty("Authorization", basicAuth);
-
-                InputStreamReader inputStreamReader = new InputStreamReader(uc.getInputStream());
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            try {
-
 
                 Authenticator.setDefault(new Authenticator() {
-
                     @Override
                     protected PasswordAuthentication getPasswordAuthentication() {
                         return new PasswordAuthentication("admin", "admin".toCharArray());
@@ -132,34 +111,20 @@ public class MainMenuHandle extends AbstractHandle {
                 URL url = new URL(stringUrl);
                 URLConnection uc = url.openConnection();
                 uc.setRequestProperty("X-Requested-With", "Curl");
+
                 InputStreamReader inputStreamReader = new InputStreamReader(uc.getInputStream());
+                BufferedReader input = new BufferedReader(inputStreamReader);
+                String line = null;
 
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            try {
-
-                String command = "curl  --digest -u \"admin:admin\" 'http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote'";
-                Process p = Runtime.getRuntime().exec(command);
-
-                new Thread(new Runnable() {
-                    public void run() {
-                        BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-                        String line = null;
-
-                        try {
-                            System.out.println("============================================================");
-                            while ((line = input.readLine()) != null)
-                                System.out.println(line);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                try {
+                    while ((line = input.readLine()) != null) {
+                        System.out.println("============================================================");
+                        System.out.println(line);
                     }
-                }).start();
 
-                p.waitFor();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 bot.sendMessage(new SendMessage()
                         .setText("Успешно!")
