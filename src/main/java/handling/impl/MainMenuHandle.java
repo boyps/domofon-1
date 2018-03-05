@@ -149,7 +149,7 @@ public class MainMenuHandle extends AbstractHandle {
 
         try {
 
-            String command = "curl -D - —digest -vu \"admin:admin\" 'http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote'";
+            String command = "curl -D - --digest -vu \"admin:admin\" 'http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote'";
             Process process = Runtime.getRuntime().exec(command);
             BufferedReader br = new BufferedReader( new InputStreamReader(process.getInputStream()));
 

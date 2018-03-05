@@ -20,5 +20,10 @@ WORKDIR /
 # Define commonly used JAVA_HOME variable
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 
+# Install prerequisites
+RUN apt-get update && apt-get install -y \
+curl
+CMD /bin/bash
+
 # Define default command.
 RUN java -jar /domofon.jar
