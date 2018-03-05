@@ -26,4 +26,4 @@ curl
 CMD /bin/bash
 
 # Define default command.
-RUN java -jar /domofon.jar
+CMD java -jar /domofon.jar
