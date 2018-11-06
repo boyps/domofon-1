@@ -89,7 +89,7 @@ public class MainMenuHandle extends AbstractHandle {
                 });
 
                 System.out.println("============================================================");
-                String stringUrl = "http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
+                String stringUrl = "";
                 URL url = new URL(stringUrl);
                 URLConnection uc = url.openConnection();
                 uc.setRequestProperty("X-Requested-With", "Curl");
@@ -132,61 +132,6 @@ public class MainMenuHandle extends AbstractHandle {
     }
 
 
-   /* @Step(value = "openMainDoor")
-    public void openMainDoor() throws Exception {
-
-        if (usersDao.UserList(chatId).size() != 0) {
-
-            try {
-
-
-                Authenticator.setDefault(new Authenticator() {
-                    @Override
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication("admin", "admin".toCharArray());
-                    }
-                });
-
-                System.out.println("============================================================");
-                String stringUrl = "http://10.205.1.82/cgi-bin/accessControl.cgi?action=openDoor&channel=1&UserID=101&Type=Remote";
-                URL url = new URL(stringUrl);
-                URLConnection uc = url.openConnection();
-                uc.setRequestProperty("X-Requested-With", "Curl");
-
-                InputStreamReader inputStreamReader = new InputStreamReader(uc.getInputStream());
-                BufferedReader input = new BufferedReader(inputStreamReader);
-                String line = null;
-
-                try {
-                    while ((line = input.readLine()) != null) {
-                        System.out.println("============================================================");
-                        System.out.println(line);
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                bot.sendMessage(new SendMessage()
-                        .setText("Успешно!")
-                        .setChatId(chatId)
-                );
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                bot.sendMessage(new SendMessage()
-                        .setText("Ошибка соединение")
-                        .setChatId(chatId)
-                );
-            }
-
-        } else {
-            bot.sendMessage(new SendMessage()
-                    .setText("У вас нет доступа ")
-                    .setChatId(chatId)
-            );
-        }
-    }*/
 
 
 
